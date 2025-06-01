@@ -52,7 +52,6 @@ function Order() {
     estimatedDelivery,
     cart,
   } = order;
-
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
   return (
     <div className="space-y-8 px-4 py-6">
