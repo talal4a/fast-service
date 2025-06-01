@@ -1,5 +1,6 @@
 import Button from '../../ui/Button';
 import LinkButton from '../../ui/LinkButton';
+import CartItem from './CartItem';
 const fakeCart = [
   {
     pizzaId: 12,
@@ -26,22 +27,21 @@ const fakeCart = [
 function Cart() {
   const cart = fakeCart;
   const totalCartPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const handleClearCart = () => {};
   return (
-    <div>
+    <div className="px-4 py-3">
       <LinkButton to="/menu">&larr; Back to menu</LinkButton>
-      <h2>Your cart</h2>
-      <ul>
+      <h2 className="mt-7 text-xl font-semibold">Your cart</h2>
+      <ul className="mt-3 divide-y divide-stone-200 border-b">
         {cart.map((item) => (
-          <li key={item.pizzaId}>
-            {item.quantity}× {item.name} — ${item.totalPrice}
-          </li>
+          <CartItem item={item} key={item.pizzaId} />
         ))}
       </ul>
-      <p>Total: ${totalCartPrice}</p>
-      <div>
-        <Button to="/order/new">Order pizzas</Button>
-        <button onClick={handleClearCart}>Clear cart</button>
+      <p className="mt-4 text-lg font-medium">Total: ${totalCartPrice}</p>
+      <div className="mt-6 flex items-center gap-x-4">
+        <Button to="/order/new" type="primary">
+          Order pizzas
+        </Button>
+        <Button type="secondary">Clear Cart</Button>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant.js';
 import Button from '../../ui/Button.jsx';
@@ -97,7 +97,7 @@ function CreateOrder() {
         </div>
         <p>Total to pay: ${finalTotal}</p>
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-        <Button disabled={isSubmitting}>
+        <Button type="primary" disabled={isSubmitting}>
           {isSubmitting ? 'Placing order...' : 'Order now'}
         </Button>
       </Form>
