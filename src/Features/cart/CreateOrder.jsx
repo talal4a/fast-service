@@ -27,9 +27,8 @@ function CreateOrder() {
     status: addressStatus,
     position,
     address,
-  } = useSelector((state) => {
-    state.user;
-  });
+    error: errorAddress,
+  } = useSelector((state) => state.user);
   const isloadingAddress = addressStatus === 'loading';
   const [withPriority, setWithPriority] = useState(false);
   const username = useSelector((state) => state.user.userName);
@@ -88,13 +87,16 @@ function CreateOrder() {
             defaultValue={address}
             className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
           />
+          {addressStatus === 'error'?.phone && (
+            <p className="mt-1 text-sm text-red-600">{errorAddress}</p>
+          )}
           {!position.lattitude && !position.longitude && (
             <div className="z-50 my-2">
               <Button
                 type="small"
                 disabled={isloadingAddress}
                 onClick={(e) => {
-                  e.preventdefault();
+                  e.preventDefault();
                   dispatch(fetchAddress());
                 }}
               >
@@ -123,6 +125,15 @@ function CreateOrder() {
           Total to pay: <span className="text-yellow-600">${finalTotal}</span>
         </p>
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+        <input
+          type="hidden"
+          name="position"
+          value={
+            position.longitude && position.lattitude
+              ? `${position.lattitude},${position.longitude}`
+              : ''
+          }
+        ></input>
         <Button type="primary" disabled={isSubmitting || isloadingAddress}>
           {isSubmitting
             ? 'Placing order...'

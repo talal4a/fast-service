@@ -10,6 +10,7 @@ import {
   formatDate,
 } from '../../utils/helpers';
 import { useEffect } from 'react';
+import UpdateOrder from './UpdateOrder';
 
 function Order() {
   const order = useLoaderData();
@@ -22,7 +23,6 @@ function Order() {
     [fetcher],
   );
 
-  // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
     id,
     status,
@@ -32,9 +32,7 @@ function Order() {
     estimatedDelivery,
     cart,
   } = order;
-
   const deliveryIn = calcMinutesLeft(estimatedDelivery);
-
   return (
     <div className="space-y-8 px-4 py-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -62,7 +60,6 @@ function Order() {
           (Estimated delivery: {formatDate(estimatedDelivery)})
         </p>
       </div>
-
       <ul className="dive-stone-200 divide-y border-t border-b">
         {cart.map((item) => (
           <OrderItem
@@ -76,7 +73,6 @@ function Order() {
           />
         ))}
       </ul>
-
       <div className="space-y-2 bg-stone-200 px-6 py-5">
         <p className="text-sm font-medium text-stone-600">
           Price pizza: {formatCurrency(orderPrice)}
@@ -90,13 +86,12 @@ function Order() {
           To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}
         </p>
       </div>
+      {!priority && <UpdateOrder order={order} />}
     </div>
   );
 }
-
 export async function loader({ params }) {
   const order = await getOrder(params.orderId);
   return order;
 }
-
 export default Order;
