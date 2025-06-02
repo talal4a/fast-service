@@ -1,3 +1,4 @@
+/*eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createOrder } from '../../services/apiRestaurant.js';
@@ -19,10 +20,19 @@ function CreateOrder() {
   const formErrors = useActionData();
   // const [customer, setCustomer] = useState('');
   const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
+
   const dispatch = useDispatch();
+  const {
+    userName,
+    status: addressStatus,
+    position,
+    address,
+  } = useSelector((state) => {
+    state.user;
+  });
+  const isloadingAddress = addressStatus === 'loading';
   const [withPriority, setWithPriority] = useState(false);
-  const userName = useSelector((state) => state.user.userName);
+  const username = useSelector((state) => state.user.userName);
   const cart = useSelector(getCart);
   const totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
   const priorityPrice = withPriority ? totalPrice * 0.2 : 0;
@@ -35,13 +45,6 @@ function CreateOrder() {
       <h2 className="text-center text-2xl font-bold text-gray-800">
         Ready to order? Lets go!
       </h2>
-      <button
-        onClick={() => {
-          dispatch(fetchAddress());
-        }}
-      >
-        Get Position
-      </button>
       <Form method="POST" className="space-y-5">
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -51,7 +54,7 @@ function CreateOrder() {
             type="text"
             name="customer"
             required
-            defaultValue={userName}
+            defaultValue={username}
             // onChange={(e) => setCustomer(e.target.value)}
             className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
           />
@@ -81,10 +84,24 @@ function CreateOrder() {
             type="text"
             name="address"
             required
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            disabled={isloadingAddress}
+            defaultValue={address}
             className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
           />
+          {!position.lattitude && !position.longitude && (
+            <div className="z-50 my-2">
+              <Button
+                type="small"
+                disabled={isloadingAddress}
+                onClick={(e) => {
+                  e.preventdefault();
+                  dispatch(fetchAddress());
+                }}
+              >
+                Get Position
+              </Button>
+            </div>
+          )}
         </div>
         <div className="flex items-center space-x-3">
           <input
@@ -106,7 +123,7 @@ function CreateOrder() {
           Total to pay: <span className="text-yellow-600">${finalTotal}</span>
         </p>
         <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-        <Button type="primary" disabled={isSubmitting}>
+        <Button type="primary" disabled={isSubmitting || isloadingAddress}>
           {isSubmitting
             ? 'Placing order...'
             : `'Order now form ${formatCurrency(finalTotal)}'`}
