@@ -10,7 +10,6 @@ export default function UpdateOrder() {
     </fetcher.Form>
   );
 }
-
 UpdateOrder.propTypes = {
   order: PropTypes.object.isRequired,
 };
