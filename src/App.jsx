@@ -1,36 +1,40 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./ui/Home.jsx";
-import Error from "./ui/Error.jsx";
-import Menu, { loader as menuLoader } from "./Features/menu/Menu.jsx";
-import Cart from "./Features/cart/Cart.jsx";
-import CreateOrder,{action as createOrderAction}from "./Features/cart/CreateOrder.jsx";
-import Order from "./Features/order/Order.jsx";
-import AppLayout from "./ui/AppLayout.jsx";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Home from './ui/Home.jsx';
+import Error from './ui/Error.jsx';
+import Menu, { loader as menuLoader } from './Features/menu/Menu.jsx';
+import Cart from './Features/cart/Cart.jsx';
+import CreateOrder, {
+  action as createOrderAction,
+} from './Features/cart/CreateOrder.jsx';
+import Order from './Features/order/Order.jsx';
+import AppLayout from './ui/AppLayout.jsx';
+import { loader as orderLoader } from './Features/order/Order.jsx';
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
     errorElement: <Error />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Home />,
       },
       {
-        path: "/menu",
+        path: '/menu',
         element: <Menu />,
         loader: menuLoader,
       },
       {
-        path: "/cart",
+        path: '/cart',
         element: <Cart />,
       },
       {
-        path: "/order/new",
+        path: '/order/new',
         element: <CreateOrder />,
         action: createOrderAction,
       },
       {
-        path: "/order/:orderId",
+        path: '/order/:orderId',
+        loader: orderLoader,
         element: <Order />,
       },
     ],
